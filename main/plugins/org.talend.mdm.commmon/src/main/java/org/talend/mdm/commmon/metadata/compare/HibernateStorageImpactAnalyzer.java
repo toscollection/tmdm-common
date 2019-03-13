@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+ * Copyright (C) 2006-2019 Talend Inc. - www.talend.com
  * 
  * This source code is available under agreement available at
  * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -57,8 +57,8 @@ public class HibernateStorageImpactAnalyzer implements ImpactAnalyzer {
                         impactSort.get(Impact.LOW).add(addAction);
                     }
                 } else { // Newly added simple field
-                    String defaultValueRule = ((FieldMetadata) element).getData(MetadataRepository.DEFAULT_VALUE_RULE);
-                    if (((FieldMetadata) element).isMandatory() && StringUtils.isBlank(defaultValueRule)) {
+                    String defaultValue = ((FieldMetadata) element).getData(MetadataRepository.DEFAULT_VALUE);
+                    if (((FieldMetadata) element).isMandatory() && StringUtils.isBlank(defaultValue)) {
                         if (hasOptionalAncestor(diffResult.getAddChanges(), (FieldMetadata) element)) {
                             impactSort.get(Impact.LOW).add(addAction);
                         } else {// With mandatory ancestor
