@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+ * Copyright (C) 2006-2019 Talend Inc. - www.talend.com
  * 
  * This source code is available under agreement available at
  * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -11,9 +11,7 @@
 package org.talend.mdm.commmon.metadata.compare;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.talend.mdm.commmon.metadata.*;
@@ -23,8 +21,6 @@ public class ModifyChange extends Change {
     private final MetadataVisitable current;
 
     private ResourceBundle bundle;
-
-    private boolean hasNullValue;
 
     public ModifyChange(MetadataVisitable previous, MetadataVisitable current) {
         super(previous);
@@ -39,13 +35,6 @@ public class ModifyChange extends Change {
         return current;
     }
 
-    public boolean isHasNullValue() {
-        return hasNullValue;
-    }
-
-    public void setHasNullValue(boolean hasNullValue) {
-        this.hasNullValue = hasNullValue;
-    }
 
     @Override
     public String getMessage(Locale locale) {

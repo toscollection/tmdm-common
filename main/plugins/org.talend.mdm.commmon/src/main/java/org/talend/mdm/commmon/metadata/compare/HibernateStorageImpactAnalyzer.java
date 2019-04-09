@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +24,7 @@ import org.talend.mdm.commmon.util.core.CommonUtil;
 
 public class HibernateStorageImpactAnalyzer implements ImpactAnalyzer {
 
-    protected final String STRING_DEFAULT_LENGTH = "255"; //$NON-NLS-1$
+    protected static final String STRING_DEFAULT_LENGTH = "255"; //$NON-NLS-1$
 
     public Map<Impact, List<Change>> analyzeImpacts(Compare.DiffResults diffResult) {
         Map<Impact, List<Change>> impactSort = new EnumMap<Impact, List<Change>>(Impact.class);
@@ -121,15 +122,24 @@ public class HibernateStorageImpactAnalyzer implements ImpactAnalyzer {
                 /*
                  * HIGH IMPACT CHANGES
                  */
-                if (element instanceof SimpleTypeFieldMetadata
-                        && MetadataUtils.getSuperConcreteType(((FieldMetadata) element).getType()).getName().equals("string")
-                        && Integer.valueOf((String) (currentLength == null ? STRING_DEFAULT_LENGTH : currentLength))
-                                .compareTo(Integer.valueOf(
-                                        (String) (previousLength == null ? STRING_DEFAULT_LENGTH : previousLength))) > 0) {
-                    impactSort.get(Impact.LOW).add(modifyAction);
+                int newLength = Integer.parseInt((currentLength == null ? STRING_DEFAULT_LENGTH : (String) currentLength));
+                int oldLength = Integer.parseInt((previousLength == null ? STRING_DEFAULT_LENGTH : (String) previousLength));
+
+                String fieldType = MetadataUtils.getSuperConcreteType(((FieldMetadata) element).getType()).getName();
+                if (element instanceof SimpleTypeFieldMetadata && fieldType.equals("string") && newLength > oldLength) { //$NON-NLS-1$
+                    if (MapUtils.getBooleanValue(modifyAction.getData(), Change.CHANGE_TO_CLOB)) {
+                        impactSort.get(Impact.HIGH).add(modifyAction);
+                    } else {
+                        impactSort.get(Impact.LOW).add(modifyAction);
+                    }
                 } else if (!ObjectUtils.equals(previousLength, currentLength)) {
                     // Won't be able to change constraint for max length
-                    impactSort.get(Impact.HIGH).add(modifyAction);
+                    if (MapUtils.getBooleanValue(modifyAction.getData(), Change.TEXT_TO_TEXT)) {
+                        impactSort.get(Impact.LOW).add(modifyAction);
+                    } else {
+                        impactSort.get(Impact.HIGH).add(modifyAction);
+                    }
+
                 } else if (!ObjectUtils.equals(previousTotalDigits, currentTotalDigits)) {
                     // TMDM-8022: issues about custom decimal type totalDigits/fractionDigits.
                     impactSort.get(Impact.HIGH).add(modifyAction);
@@ -159,12 +169,13 @@ public class HibernateStorageImpactAnalyzer implements ImpactAnalyzer {
                     if (element instanceof SimpleTypeFieldMetadata) {
                         if (!previous.isMandatory() && current.isMandatory()) {
                             // Won't be able to change constraint
-                            String defaultValueRule = ((FieldMetadata) current).getData(MetadataRepository.DEFAULT_VALUE_RULE);
-                            if (!modifyAction.isHasNullValue()) {
+                            String defaultValue = ((FieldMetadata) current).getData(MetadataRepository.DEFAULT_VALUE);
+                            boolean isHasNullValue = MapUtils.getBooleanValue(modifyAction.getData(), Change.HAS_NULL_VALUE);
+                            if (!isHasNullValue) {
                                 impactSort.get(Impact.LOW).add(modifyAction);
-                            } else if (modifyAction.isHasNullValue() && StringUtils.isBlank(defaultValueRule)) {
+                            } else if (isHasNullValue && StringUtils.isBlank(defaultValue)) {
                                 impactSort.get(Impact.HIGH).add(modifyAction);
-                            } else if (modifyAction.isHasNullValue() && StringUtils.isNotBlank(defaultValueRule)) {
+                            } else if (isHasNullValue && StringUtils.isNotBlank(defaultValue)) {
                                 impactSort.get(Impact.MEDIUM).add(modifyAction);
                             }
                         } else if (previous.isMandatory() && !current.isMandatory()) {
