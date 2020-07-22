@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.talend.mdm</groupId>
         <artifactId>mdm-base</artifactId>
-        <version>7.3.2-SNAPSHOT</version>
+        <version>7.3.1</version>
         <relativePath>../org.talend.mdm.base/pom.xml</relativePath>
     </parent>
 
