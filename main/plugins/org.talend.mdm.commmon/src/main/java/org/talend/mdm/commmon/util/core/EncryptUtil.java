@@ -28,13 +28,14 @@ import java.util.Map.Entry;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EncryptUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EncryptUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(EncryptUtil.class);
 
     private static String DB_DEFAULT_DATASOURCE = "db.default.datasource"; //$NON-NLS-1$
 
@@ -42,17 +43,21 @@ public class EncryptUtil {
 
     private static boolean updated = false;
 
-    private static String dataSourceName;
+	private static String dataSourceName;
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
             return;
         }
+        String keyfile = System.getProperty(AESEncryption.KEYS_FILE);		 
+        if (StringUtils.isEmpty(keyfile)) {
+            System.setProperty(AESEncryption.KEYS_FILE, args[0] + "aeskey.dat");
+        }
         encrypt(args[0]);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static boolean encrypt(String path) {
+    public static boolean encrypt(String path) throws Exception {
         Map<String, String[]> propertiesFileMap = new HashMap<String, String[]>();
 
         String[] mdmProperties = { ADMIN_PASSWORD, TECHNICAL_PASSWORD, TDS_PASSWORD, HZ_GROUP_PASSWORD, ACTIVEMQ_PASSWORD,
@@ -69,7 +74,7 @@ public class EncryptUtil {
         return true;
     }
 
-    public static void encryptProperties(String location, String[] properties) {
+    public static void encryptProperties(String location, String[] properties) throws Exception {
         try {
             File file = new File(location);
             if (file.exists()) {
@@ -84,9 +89,8 @@ public class EncryptUtil {
                 updated = false;
                 for (String property : properties) {
                     String password = config.getString(property);
-                    if (StringUtils.isNotEmpty(password) && !password.endsWith(Crypt.ENCRYPT)) {
-                        password = Crypt.encrypt(password);
-                        config.setProperty(property, password);
+                    if (StringUtils.isNotEmpty(password)) {                     	
+						config.setProperty(property, AESEncryption.getInstance().reEncrypt(property, password));
                         updated = true;
                     }
                 }
@@ -94,12 +98,12 @@ public class EncryptUtil {
                     config.save(file);
                 }
             }
-        } catch (Exception e) {
-            LOGGER.error("Encrypt password in '" + location + "' error.", e); //$NON-NLS-1$ //$NON-NLS-2$
+        } catch (Exception e) { 
+            throw new Exception("Encrypt password in '" + location + "' error.", e); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
-    public static void encyptXML(String location) {
+    public static void encyptXML(String location) throws Exception {
         try {
             File file = new File(location);
             if (file.exists()) {
@@ -130,14 +134,14 @@ public class EncryptUtil {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("Encrypt password in '" + location + "' error."); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new Exception("Encrypt password in '" + location + "' error."); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
     private static void encryptByXpath(HierarchicalConfiguration config, String xpath) throws Exception {
         String password = config.getString(xpath);
-        if (StringUtils.isNotEmpty(password) && !password.endsWith(Crypt.ENCRYPT)) {
-            config.setProperty(xpath, Crypt.encrypt(password));
+        if (StringUtils.isNotEmpty(password)) {     	
+			config.setProperty(xpath, AESEncryption.getInstance().reEncrypt(xpath, password));
             updated = true;
         }
     }

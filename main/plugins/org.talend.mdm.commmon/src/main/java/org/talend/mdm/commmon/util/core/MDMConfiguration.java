@@ -19,6 +19,7 @@ import org.apache.commons.configuration.ConfigurationConverter;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.talend.mdm.commmon.util.core.AESEncryption;
 
 /**
  * Handles the mdm.conf file
@@ -160,11 +161,12 @@ public final class MDMConfiguration {
                 config.setEncoding(StandardCharsets.UTF_8.name());
                 config.load(file);
                 // Decrypt the passwords in mdm.conf
-                config.setProperty(ADMIN_PASSWORD, Crypt.decrypt(config.getString(ADMIN_PASSWORD)));
-                config.setProperty(TECHNICAL_PASSWORD, Crypt.decrypt(config.getString(TECHNICAL_PASSWORD)));
-                config.setProperty(TDS_PASSWORD, Crypt.decrypt(config.getString(TDS_PASSWORD)));
-                config.setProperty(HZ_GROUP_PASSWORD, Crypt.decrypt(config.getString(HZ_GROUP_PASSWORD)));
-                config.setProperty(SCIM_PASSWORD, Crypt.decrypt(config.getString(SCIM_PASSWORD)));
+				AESEncryption encryption = AESEncryption.getInstance();
+                config.setProperty(ADMIN_PASSWORD, encryption.decrypt(ADMIN_PASSWORD, config.getString(ADMIN_PASSWORD)));
+                config.setProperty(TECHNICAL_PASSWORD, encryption.decrypt(TECHNICAL_PASSWORD, config.getString(TECHNICAL_PASSWORD)));
+                config.setProperty(TDS_PASSWORD, encryption.decrypt(TDS_PASSWORD, config.getString(TDS_PASSWORD)));
+                config.setProperty(HZ_GROUP_PASSWORD,encryption.decrypt(HZ_GROUP_PASSWORD, config.getString(HZ_GROUP_PASSWORD)));
+                config.setProperty(SCIM_PASSWORD, encryption.decrypt(SCIM_PASSWORD, config.getString(SCIM_PASSWORD)));
                 properties = ConfigurationConverter.getProperties(config);
             } catch (Exception e) {
                 if (!ignoreIfNotFound) {
