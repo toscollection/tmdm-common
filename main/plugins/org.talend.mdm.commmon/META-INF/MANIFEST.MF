@@ -7,8 +7,8 @@ Require-Bundle: org.eclipse.xsd,
  org.apache.commons.lang,
  org.apache.commons.collections,
  org.apache.commons.jxpath,
- org.apache.commons.configuration;bundle-version="[0.0.0,2.0.0)",
- org.talend.utils
+ org.apache.commons.codec,
+ org.apache.commons.configuration;bundle-version="[0.0.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.mdm.commmon.metadata,
  org.talend.mdm.commmon.metadata.validation,
@@ -17,4 +17,4 @@ Export-Package: org.talend.mdm.commmon.metadata,
  org.talend.mdm.commmon.util.hash.impl,
  org.talend.mdm.commmon.util.webapp,
  org.talend.mdm.commmon.util.workbench
-Import-Package: org.apache.logging.log4j
+Import-Package: org.apache.logging.log4j, org.talend.daikon.crypto

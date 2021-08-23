@@ -24,11 +24,11 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.talend.mdm.commmon.metadata.validation.ValidationFactory;
 import org.talend.mdm.commmon.metadata.validation.ValidationRule;
 
@@ -37,7 +37,7 @@ import org.talend.mdm.commmon.metadata.validation.ValidationRule;
  */
 public class ComplexTypeMetadataImpl extends MetadataExtensions implements ComplexTypeMetadata {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ComplexTypeMetadataImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(ComplexTypeMetadataImpl.class);
 
     private final String nameSpace;
 

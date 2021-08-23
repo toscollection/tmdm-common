@@ -636,37 +636,6 @@
                 <type>war</type>
             </dependency>
             <dependency>
-                <groupId>org.talend</groupId>
-                <artifactId>org.talend.utils</artifactId>
-                <version>7.4.1-SNAPSHOT</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.talend.daikon</groupId>
-                        <artifactId>daikon</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-databind</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-annotations</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.talend.daikon</groupId>
                 <artifactId>daikon-audit</artifactId>
                 <version>${daikon.version}</version>
@@ -678,6 +647,17 @@
                     <exclusion>
                         <groupId>org.talend.daikon</groupId>
                         <artifactId>audit-kafka</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.talend.daikon</groupId>
+                <artifactId>crypto-utils</artifactId>
+                <version>${daikon.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-configuration2</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

@@ -14,7 +14,7 @@ package org.talend.mdm.commmon.metadata;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
