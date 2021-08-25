@@ -25,7 +25,8 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.talend.mdm.commmon.metadata.validation.ValidationFactory;
 import org.talend.mdm.commmon.metadata.validation.ValidationRule;
 
@@ -34,7 +35,7 @@ import org.talend.mdm.commmon.metadata.validation.ValidationRule;
  */
 public class ComplexTypeMetadataImpl extends MetadataExtensions implements ComplexTypeMetadata {
 
-    private static final Logger LOGGER = Logger.getLogger(ComplexTypeMetadataImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComplexTypeMetadataImpl.class);
 
     private final String nameSpace;
 

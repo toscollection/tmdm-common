@@ -29,7 +29,6 @@ import javax.xml.XMLConstants;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDAnnotation;
@@ -59,6 +58,8 @@ import org.eclipse.xsd.XSDTotalDigitsFacet;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDXPathDefinition;
 import org.eclipse.xsd.util.XSDParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.talend.mdm.commmon.metadata.annotation.CategoryAnnotationProcessor;
 import org.talend.mdm.commmon.metadata.annotation.DefaultValueRuleProcessor;
 import org.talend.mdm.commmon.metadata.annotation.DescriptionAnnotationProcessor;
@@ -139,7 +140,7 @@ public class MetadataRepository implements MetadataVisitable, XSDVisitor, Serial
             DEFAULT_VALUE, DEFAULT_VALUE_RULE, MIN_OCCURS, MAX_OCCURS, ENUMERATION_LIST, MAX_EXCLUSIVE, MIN_EXCLUSIVE, PATTERN,
             MAX_INCLUSIVE, MIN_INCLUSIVE, VALIDATION_MARKER, VALIDATION_PERMISSION_MARKER };
 
-    private static final Logger LOGGER = Logger.getLogger(MetadataRepository.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetadataRepository.class);
 
     private final Map<XSDTypeDefinition, List<ComplexTypeMetadata>> entityTypeUsage = new HashMap<XSDTypeDefinition, List<ComplexTypeMetadata>>() {
 
