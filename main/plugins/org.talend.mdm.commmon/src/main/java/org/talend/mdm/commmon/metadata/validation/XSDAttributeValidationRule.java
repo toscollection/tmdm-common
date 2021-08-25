@@ -20,8 +20,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.log4j.Logger;
 import org.eclipse.xsd.util.XSDParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.talend.mdm.commmon.metadata.ComplexTypeMetadata;
 import org.talend.mdm.commmon.metadata.MetadataRepository;
 import org.talend.mdm.commmon.metadata.ValidationError;
@@ -35,7 +36,7 @@ import org.w3c.dom.NodeList;
  */
 class XSDAttributeValidationRule implements ValidationRule {
 
-    private static final Logger LOGGER = Logger.getLogger(XSDAttributeValidationRule.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XSDAttributeValidationRule.class);
 
     private final ComplexTypeMetadata type;
 
