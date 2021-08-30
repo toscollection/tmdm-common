@@ -49,6 +49,7 @@
         <daikon.version>5.5.0</daikon.version>
         <apache.taglibs.version>1.2.5</apache.taglibs.version>
         <org.bouncycastle.version>1.68</org.bouncycastle.version>
+        <iam.client.version>8.0.1-20210819093016</iam.client.version>
     </properties>
     <repositories>
         <repository>
