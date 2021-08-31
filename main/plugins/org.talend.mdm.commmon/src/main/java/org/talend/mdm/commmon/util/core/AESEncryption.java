@@ -74,6 +74,10 @@ public class AESEncryption {
 		}
 	}
 
+	public Encryption getEncryption() {
+		return encryption;
+	}
+
 	public String encrypt(String key, String value) throws IOException {
 		try {
 			return StringUtils.isEmpty(value) ? StringUtils.EMPTY : encryption.encrypt(value);
