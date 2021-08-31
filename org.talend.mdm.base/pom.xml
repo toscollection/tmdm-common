@@ -635,7 +635,7 @@
                 <artifactId>org.talend.mdm.webapp.core.open</artifactId>
                 <version>${project.version}</version>
                 <type>war</type>
-            </dependency>
+            </dependency>           
             <dependency>
                 <groupId>org.talend.daikon</groupId>
                 <artifactId>daikon-audit</artifactId>
@@ -652,16 +652,16 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.talend.daikon</groupId>
-                <artifactId>crypto-utils</artifactId>
-                <version>${daikon.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-configuration2</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+            <groupId>org.talend.daikon</groupId>
+            <artifactId>crypto-utils</artifactId>
+            <version>${daikon.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-configuration2</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
             <!-- 3rd party dependencies -->
             <dependency>

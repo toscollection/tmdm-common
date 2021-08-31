@@ -20,8 +20,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -39,6 +37,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.talend.mdm.commmon.util.exception.XmlBeanDefinitionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -49,7 +49,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class MDMXMLUtils {
 
-    private static final Logger LOGGER = LogManager.getLogger(MDMXMLUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MDMXMLUtils.class);
 
     public static final String FEATURE_DISALLOW_DOCTYPE = "http://apache.org/xml/features/disallow-doctype-decl";
 

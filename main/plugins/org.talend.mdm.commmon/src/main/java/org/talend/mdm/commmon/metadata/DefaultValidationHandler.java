@@ -15,15 +15,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import org.apache.commons.collections.map.MultiKeyMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 public class DefaultValidationHandler implements ValidationHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(DefaultValidationHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultValidationHandler.class);
 
     private final Map<ValidationError, MultiKeyMap> errors = new HashMap<ValidationError, MultiKeyMap>();
 

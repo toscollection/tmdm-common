@@ -24,18 +24,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 
 public class EncryptUtil {
 
-	private static final Logger LOGGER = LogManager.getLogger(EncryptUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EncryptUtil.class);
 
     private static String DB_DEFAULT_DATASOURCE = "db.default.datasource"; //$NON-NLS-1$
 
