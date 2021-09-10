@@ -24,7 +24,7 @@
         <gwt.gxt.version>2.2.5-gwt22</gwt.gxt.version>
         <gwt.dnd.version>3.1.2</gwt.dnd.version>
 
-        <apache.httpcomponents.version>4.5.10</apache.httpcomponents.version>
+        <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
         <spring.version>5.3.9</spring.version>
         <spring.security.version>5.5.1</spring.security.version>
         <cxf.version>3.3.6</cxf.version>
@@ -671,7 +671,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.14</version>
+                <version>1.15</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.poi</groupId>
@@ -1289,7 +1289,7 @@
             <dependency>
                 <groupId>commons-httpclient</groupId>
                 <artifactId>commons-httpclient</artifactId>
-                <version>3.0.1</version>
+                <version>3.1</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
@@ -1329,7 +1329,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore</artifactId>
-                <version>4.4.12</version>
+                <version>4.4.14</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
