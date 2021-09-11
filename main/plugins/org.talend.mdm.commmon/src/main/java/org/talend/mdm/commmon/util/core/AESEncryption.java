@@ -53,8 +53,7 @@ public class AESEncryption {
 			String keyfile = System.getProperty(KEYS_FILE);
 			if (StringUtils.isEmpty(keyfile)) {
 				String userDir = System.getProperty("user.dir");
-				keyfile = userDir.substring(0, userDir.indexOf("apache-tomcat")) + "conf"
-						+ System.getProperty("file.separator") + "aeskey.dat";
+				keyfile = System.getProperty("catalina.base") + File.separator + "conf" + File.separator + "aeskey.dat";
 				System.setProperty(KEYS_FILE, keyfile);
 				File file = new File(keyfile);
 				if (file.exists()) {
