@@ -46,7 +46,7 @@
         <jakarta.jaxb.version>2.3.2</jakarta.jaxb.version>
         <daikon.version>4.1.0</daikon.version>
         <apache.taglibs.version>1.2.5</apache.taglibs.version>
-        <org.bouncycastle.version>1.68</org.bouncycastle.version>
+        <org.bouncycastle.version>1.69</org.bouncycastle.version>
     </properties>
     <repositories>
         <repository>
@@ -1005,6 +1005,12 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcpkix-jdk15on</artifactId>
                 <version>${org.bouncycastle.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.bouncycastle</groupId>
+                        <artifactId>bcutil-jdk15on</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.json</groupId>
