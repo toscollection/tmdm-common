@@ -47,7 +47,7 @@
         <jaxb.version>2.3.0</jaxb.version>
         <xalan.version>2.7.2</xalan.version>
         <saxon.version>9.0.0.8</saxon.version>
-        <daikon.version>5.5.0</daikon.version>
+        <daikon.version>4.1.0</daikon.version>
         <apache.taglibs.version>1.2.5</apache.taglibs.version>
         <org.bouncycastle.version>1.69</org.bouncycastle.version>
         <iam.client.version>8.0.1-20210819093016</iam.client.version>
