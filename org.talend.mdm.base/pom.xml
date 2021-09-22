@@ -653,16 +653,21 @@
                 </exclusions>
             </dependency>
             <dependency>
-            <groupId>org.talend.daikon</groupId>
-            <artifactId>crypto-utils</artifactId>
-            <version>${daikon.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-configuration2</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>2.4.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.talend.daikon</groupId>
+                <artifactId>crypto-utils</artifactId>
+                <version>${daikon.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-configuration2</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
             <!-- 3rd party dependencies -->
             <dependency>
