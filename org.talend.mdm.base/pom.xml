@@ -45,7 +45,7 @@
         <saxon.version>9.0.0.8</saxon.version>
         <jaxb.version>2.3.0</jaxb.version>
         <jakarta.jaxb.version>2.3.2</jakarta.jaxb.version>
-        <daikon.version>5.5.0</daikon.version>
+        <daikon.version>4.1.0</daikon.version>
         <apache.taglibs.version>1.2.5</apache.taglibs.version>
         <org.bouncycastle.version>1.68</org.bouncycastle.version>
     </properties>
@@ -668,6 +668,22 @@
                     <exclusion>
                         <groupId>org.talend.daikon</groupId>
                         <artifactId>audit-kafka</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>2.4.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.talend.daikon</groupId>
+                <artifactId>crypto-utils</artifactId>
+                <version>${daikon.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-configuration2</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
