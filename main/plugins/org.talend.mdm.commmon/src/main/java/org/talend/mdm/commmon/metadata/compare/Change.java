@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+ * Copyright (C) 2006-2019 Talend Inc. - www.talend.com
  * 
  * This source code is available under agreement available at
  * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -10,11 +10,19 @@
 
 package org.talend.mdm.commmon.metadata.compare;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.talend.mdm.commmon.metadata.MetadataVisitable;
 
 public abstract class Change {
+
+    public static final String CHANGE_TO_CLOB = "changToClob"; //$NON-NLS-1$
+
+    public static final String HAS_NULL_VALUE = "hasNullValue"; //$NON-NLS-1$
+
+    public static final String TEXT_TO_TEXT = "textToText"; //$NON-NLS-1$
 
     protected static final String MESSAGE_BUNDLE_NAME = "org.talend.mdm.commmon.metadata.compare.i18n.messages"; //$NON-NLS-1$
 
@@ -30,6 +38,8 @@ public abstract class Change {
 
     public abstract String getMessage(Locale locale);
 
+    private Map<String, Object> data = new HashMap<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -42,5 +52,13 @@ public abstract class Change {
     @Override
     public int hashCode() {
         return 31 * this.element.hashCode();
+    }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
+    public void addData(String key, Object value){
+        this.data.put(key, value);
     }
 }
