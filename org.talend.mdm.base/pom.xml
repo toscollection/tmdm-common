@@ -41,7 +41,7 @@
         <mdm.build.web.dir>${mdm.build.dir}/${project.artifactId}-${project.version}</mdm.build.web.dir>
         <mdm.app.dir>${dev.tomcat.home}/webapps/talendmdm</mdm.app.dir>
         <jacoco.exec.file>${project.parent.build.directory}/${project.artifactId}.exec</jacoco.exec.file>
-        <xalan.version>2.7.1</xalan.version>
+        <xalan.version>2.7.2</xalan.version>
         <saxon.version>9.0.0.8</saxon.version>
         <jaxb.version>2.3.0</jaxb.version>
         <jakarta.jaxb.version>2.3.2</jakarta.jaxb.version>
@@ -976,8 +976,7 @@
             <dependency>
                 <groupId>xml-apis</groupId>
                 <artifactId>xml-apis</artifactId>
-                <version>1.0.b2</version>
-                <scope>provided</scope>
+                <version>1.4.01</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
@@ -1403,7 +1402,7 @@
             <dependency>
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache-extras.beanshell</groupId>
@@ -1472,7 +1471,7 @@
             <dependency>
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
-                <version>2.9.1</version>
+                <version>2.12.1</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
@@ -1484,11 +1483,6 @@
 	            <artifactId>hibernate-validator</artifactId>
 	            <version>5.3.4.Final</version>
 	        </dependency>
-            <dependency>
-                <groupId>jstl</groupId>
-                <artifactId>jstl</artifactId>
-                <version>1.2</version>
-            </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-core</artifactId>
