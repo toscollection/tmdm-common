@@ -26,9 +26,9 @@
 
         <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
         <logging.version>2.16.0</logging.version>
+        <cxf.version>3.4.5</cxf.version>
         <spring.version>5.3.12</spring.version>
         <spring.security.version>5.5.3</spring.security.version>
-        <cxf.version>3.4.4</cxf.version>
         <powermock.version>1.7.4</powermock.version>
         <hibernate.search.version>5.11.9.Final</hibernate.search.version>
         <lucene.version>5.5.5</lucene.version>
@@ -1450,6 +1450,11 @@
                             <artifactId>javax.annotation-api</artifactId>
                         </exclusion>
                     </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
