@@ -1090,12 +1090,12 @@
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-core-asl</artifactId>
-                <version>1.9.15-TALEND</version>
+                <version>1.9.16-TALEND</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-asl</artifactId>
-                <version>1.9.15-TALEND</version>
+                <version>1.9.16-TALEND</version>
             </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
