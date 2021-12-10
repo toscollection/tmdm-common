@@ -84,9 +84,11 @@ public class MDMXMLUtils {
     static {
         try {
             DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+            DOC_BUILDER_FACTORY.setNamespaceAware(true);
             DOC_BUILDER_FACTORY.setIgnoringComments(true);
             DOC_BUILDER_FACTORY.setExpandEntityReferences(false);
             DOC_BUILDER_FACTORY.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
+            DOC_BUILDER_FACTORY.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
 
             DOC_BUILDER_FACTORY_WITH_NAMESPACE = DocumentBuilderFactory.newInstance();
             DOC_BUILDER_FACTORY_WITH_NAMESPACE.setNamespaceAware(true);
