@@ -13,6 +13,7 @@ package org.talend.mdm.commmon.metadata.annotation;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -29,7 +30,22 @@ import org.w3c.dom.Element;
 
 public class SchematronProcessor implements XmlSchemaAnnotationProcessor {
 
-    private static final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    private static final TransformerFactory transformerFactory;
+
+    static {
+        // the open jdk implementation allows the disabling of the feature used for XXE
+        System.setProperty("javax.xml.transform.TransformerFactory",
+                "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+        transformerFactory = TransformerFactory.newInstance();
+        try {
+            transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            // Note using XMLConstant Strings rather than referring to XMLConstants to avoid issues with Xerces
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        } catch (TransformerConfigurationException e) {
+            // Just catch this, as Xalan doesn't support the above
+        }
+    }
 
     @Override
     public void process(MetadataRepository repository, ComplexTypeMetadata type, XSDAnnotation annotation,
