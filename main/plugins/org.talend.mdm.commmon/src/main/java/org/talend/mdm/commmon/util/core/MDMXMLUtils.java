@@ -95,6 +95,7 @@ public class MDMXMLUtils {
             DOC_BUILDER_FACTORY_WITH_NAMESPACE.setIgnoringComments(true);
             DOC_BUILDER_FACTORY_WITH_NAMESPACE.setExpandEntityReferences(false);
             DOC_BUILDER_FACTORY_WITH_NAMESPACE.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
+            DOC_BUILDER_FACTORY_WITH_NAMESPACE.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
         } catch (Exception e) {
             throw new XmlBeanDefinitionException("Error occurred while initializing DocumentBuilderFactory", e);
         }
