@@ -26,6 +26,7 @@
 
         <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
         <logging.version>2.17.1</logging.version>
+        <slf4j.version>1.7.33</slf4j.version>
         <cxf.version>3.4.5</cxf.version>
         <spring.version>5.3.12</spring.version>
         <spring.security.version>5.5.3</spring.security.version>
@@ -684,6 +685,12 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi</artifactId>
                 <version>5.0.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jcl-over-slf4j</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.poi</groupId>
@@ -1031,13 +1038,13 @@
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.32</version>
+               <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>2.0.0-alpha5</version>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>xml-apis</groupId>
@@ -1228,11 +1235,6 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-web</artifactId>
-                <version>${logging.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-1.2-api</artifactId>
                 <version>${logging.version}</version>
             </dependency>
             <dependency>
@@ -1517,6 +1519,12 @@
                 <groupId>jmimemagic</groupId>
                 <artifactId>jmimemagic</artifactId>
                 <version>0.1.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- container dependencies -->
             <dependency>
