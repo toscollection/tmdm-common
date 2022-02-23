@@ -11,17 +11,21 @@
 package org.talend.mdm.commmon.util.core;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,17 +36,27 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.talend.mdm.commmon.util.exception.SAXErrorHandler;
 import org.talend.mdm.commmon.util.exception.XmlBeanDefinitionException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -69,9 +83,13 @@ public class MDMXMLUtils {
 
     public static final String PROPERTY_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
 
-    private static final DocumentBuilderFactory DOC_BUILDER_FACTORY;
+    private static final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
-    private static final DocumentBuilderFactory DOC_BUILDER_FACTORY_WITH_NAMESPACE;
+    private static final DocumentBuilderFactory DOC_BUILDER_FACTORY_WITH_NAMESPACE = DocumentBuilderFactory.newInstance();
+
+    private static final DocumentBuilderFactory NON_VALIDATING_DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+
+    private static final DocumentBuilderFactory SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
     private static final XMLReader XML_READER;
 
@@ -79,24 +97,27 @@ public class MDMXMLUtils {
 
     private static final XMLInputFactory XML_INPUT_FACTORY;
 
-    private static final TransformerFactory TRANSFORMER_FACTORY;
+    private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
 
     static {
         try {
-            DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
-            DOC_BUILDER_FACTORY.setNamespaceAware(true);
             DOC_BUILDER_FACTORY.setIgnoringComments(true);
-            DOC_BUILDER_FACTORY.setExpandEntityReferences(false);
-            DOC_BUILDER_FACTORY.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
-            DOC_BUILDER_FACTORY.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+            secureFeatures(DOC_BUILDER_FACTORY);
 
-            DOC_BUILDER_FACTORY_WITH_NAMESPACE = DocumentBuilderFactory.newInstance();
-            DOC_BUILDER_FACTORY_WITH_NAMESPACE.setNamespaceAware(true);
             DOC_BUILDER_FACTORY_WITH_NAMESPACE.setIgnoringComments(true);
             DOC_BUILDER_FACTORY_WITH_NAMESPACE.setExpandEntityReferences(false);
             DOC_BUILDER_FACTORY_WITH_NAMESPACE.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
-            DOC_BUILDER_FACTORY_WITH_NAMESPACE.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+            secureFeatures(DOC_BUILDER_FACTORY_WITH_NAMESPACE);
+
+            NON_VALIDATING_DOCUMENT_BUILDER_FACTORY.setValidating(false);
+            secureFeatures(NON_VALIDATING_DOCUMENT_BUILDER_FACTORY);
+
+            // initialize the sax parser which uses Xerces
+            secureFeatures(SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY);
+            // Schema validation based on schemaURL
+            SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY.setAttribute(PROPERTY_SCHEMA_LANGUAGE, PROPERTY_XML_SCHEMA);
         } catch (Exception e) {
+            LOGGER.error("Error during creating secured DocumentBuilderFactory instance: " + e);
             throw new XmlBeanDefinitionException("Error occurred while initializing DocumentBuilderFactory", e);
         }
 
@@ -113,7 +134,7 @@ public class MDMXMLUtils {
 
         try {
             SAX_PARSER_FACTORY = SAXParserFactory.newInstance();
-            SAX_PARSER_FACTORY.setFeature(FEATURE_DISALLOW_DOCTYPE,true);
+            SAX_PARSER_FACTORY.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
             SAX_PARSER_FACTORY.setFeature(FEATURE_EXTERNAL_GENERAL_ENTITIES, false);
             SAX_PARSER_FACTORY.setFeature(FEATURE_EXTERNAL_PARAM_ENTITIES, false);
             SAX_PARSER_FACTORY.setFeature(FEATURE_LOAD_EXTERNAL, false);
@@ -124,10 +145,11 @@ public class MDMXMLUtils {
         }
 
         try {
-            TRANSFORMER_FACTORY = TransformerFactory.newInstance();
             TRANSFORMER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
         } catch (Exception e) {
-            throw new XmlBeanDefinitionException("Error occurred while initializing TransformerFactory, \n caused by ", e);
+            // Just catch this, as Xalan doesn't support the above
         }
 
         XML_INPUT_FACTORY = XMLInputFactory.newInstance();
@@ -135,6 +157,19 @@ public class MDMXMLUtils {
         XML_INPUT_FACTORY.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
         XML_INPUT_FACTORY.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
         XML_INPUT_FACTORY.setProperty(PROPERTY_IS_SUPPORT_EXTERNAL_ENTITIES, false);
+    }
+
+    public static void secureFeatures(DocumentBuilderFactory factory) {
+        try {
+            factory.setNamespaceAware(true);
+            factory.setExpandEntityReferences(false);
+            factory.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+            factory.setFeature(FEATURE_EXTERNAL_GENERAL_ENTITIES, false);
+            factory.setFeature(FEATURE_EXTERNAL_PARAM_ENTITIES, false);
+        } catch (ParserConfigurationException e) {
+            throw new XmlBeanDefinitionException("Error occurred while initializing DocumentBuilderFactory", e);
+        }
     }
 
     public static XMLStreamReader createXMLStreamReader(InputStream inputStream) {
@@ -196,6 +231,10 @@ public class MDMXMLUtils {
 
     private static DocumentBuilderFactory getDocumentBuilderFactoryWithNamespace() {
         return DOC_BUILDER_FACTORY_WITH_NAMESPACE;
+    }
+
+    private static synchronized DocumentBuilderFactory getNoValidationDocumentBuilderFactory() {
+        return NON_VALIDATING_DOCUMENT_BUILDER_FACTORY;
     }
 
     public static Optional<DocumentBuilder> getDocumentBuilder() {
@@ -325,5 +364,273 @@ public class MDMXMLUtils {
             content = stringWriter.toString();
         }
         return content;
+    }
+
+    /**
+     * Method {@link MDMXMLUtils#transformXmlToString()} come from deprecated class XmlUtil in project
+     * org.talend.mdm.webapp.base
+     * 
+     * @param XmlString
+     * @return
+     */
+    public static String transformXmlToString(String XmlString) {
+        return XmlString.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+                .replaceAll("'", "&apos;"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * Method {@link MDMXMLUtils#transformStringToXml()} come from deprecated class XmlUtil in project
+     * org.talend.mdm.webapp.base
+     * 
+     * @param XmlString
+     * @return
+     */
+    public static String transformStringToXml(String value) {
+        return value.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&").replaceAll("&quot;", "\"") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+                .replaceAll("&apos;", "'"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * Method {@link MDMXMLUtils#escapeXml()} come from deprecated class XmlUtil in package com.amalto.webapp.core.util.
+     * 
+     * @param XmlString
+     * @return
+     */
+    public static String escapeXml(String value) {
+        if (value == null)
+            return null;
+        boolean isEscaped = false;
+        if (value.contains("&quot;") || //$NON-NLS-1$
+                value.contains("&amp;") || //$NON-NLS-1$
+                value.contains("&lt;") || //$NON-NLS-1$
+                value.contains("&gt;")) { //$NON-NLS-1$
+            isEscaped = true;
+        }
+        if (!isEscaped) {
+            value = StringEscapeUtils.escapeXml(value);
+        }
+        return value;
+    }
+
+    public static String unescapeXml(String value) {
+        if (value == null) {
+            return null;
+        }
+        return StringEscapeUtils.unescapeXml(value);
+    }
+
+    public static Document parse(String xmlString) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory factory = getNoValidationDocumentBuilderFactory();
+        factory.setExpandEntityReferences(false);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        SAXErrorHandler seh = new SAXErrorHandler();
+        builder.setErrorHandler(seh);
+        Document d = builder.parse(new InputSource(new StringReader(xmlString)));
+        // check if document parsed correctly against the schema
+        String errors = seh.getErrors();
+        if (errors.length() != 0) {
+            String err = "Document did not parse against schema: \n" + errors + "\n"
+                    + xmlString.substring(0, Math.min(100, xmlString.length()));
+            throw new SAXException(err);
+        }
+        return d;
+    }
+
+    public static String getFirstTextNode(Node contextNode, String xPath, Node namespaceNode) throws TransformerException {
+        String[] res = getTextNodes(contextNode, xPath, namespaceNode);
+        if (res.length == 0) {
+            return null;
+        }
+        return res[0];
+    }
+
+    public static String getFirstTextNode(Node contextNode, String xPath) throws TransformerException {
+        return getFirstTextNode(contextNode, xPath, contextNode);
+    }
+
+    /**
+     * The value of the first text node at the xPath which is not null<br>
+     * @see #getTextNodes(Node, String)
+     * @param contextNode
+     * @param xPath
+     * @return teh String value
+     * @throws TransformerException
+     */
+    public static String getFirstTextNodeNotNull(Node contextNode, String xPath) throws TransformerException {
+        String val = getFirstTextNode(contextNode, xPath, contextNode);
+        return val == null ? "" : val;
+    }
+
+    /**
+     * Return the String values of the Text Nodes below an xPath
+     * @param contextNode
+     * @param xPath
+     * @return a String Array of the text node values
+     * @throws TransformerException
+     */
+    public static String[] getTextNodes(Node contextNode, String xPath) throws TransformerException {
+        return getTextNodes(contextNode, xPath, contextNode);
+    }
+
+    public static String[] getTextNodes(Node contextNode, String xPath, final Node namespaceNode) throws TransformerException {
+        String[] results;
+        // test for hard-coded values
+        if (xPath.startsWith("\"") && xPath.endsWith("\"")) {
+            return new String[] { xPath.substring(1, xPath.length() - 1) };
+        }
+        // test for incomplete path (elements missing /text())
+        if (!xPath.matches(".*@[^/\\]]+")) { // attribute
+            if (!xPath.endsWith(")")) { // function
+                xPath += "/text()";
+            }
+        }
+        try {
+            XPath path = XPathFactory.newInstance().newXPath();
+            path.setNamespaceContext(new NamespaceContext() {
+
+                @Override
+                public String getNamespaceURI(String s) {
+                    return namespaceNode.getNamespaceURI();
+                }
+
+                @Override
+                public String getPrefix(String s) {
+                    return namespaceNode.getPrefix();
+                }
+
+                @Override
+                public Iterator getPrefixes(String s) {
+                    return Collections.singleton(namespaceNode.getPrefix()).iterator();
+                }
+            });
+            NodeList xo = (NodeList) path.evaluate(xPath, contextNode, XPathConstants.NODESET);
+            results = new String[xo.getLength()];
+            for (int i = 0; i < xo.getLength(); i++) {
+                results[i] = xo.item(i).getTextContent();
+            }
+        } catch (Exception e) {
+            String err = "Unable to get the text node(s) of " + xPath + ": " + e.getClass().getName() + ": "
+                    + e.getLocalizedMessage();
+            throw new TransformerException(err);
+        }
+        return results;
+    }
+
+    /**
+     * Parsed an XML String into a {@link Document} without schema validation
+     * @param xmlString
+     * @return the Document
+     * @throws ParserConfigurationException,IOException, SAXException
+     */
+    public static Document parseXml(String xmlString) throws ParserConfigurationException, IOException, SAXException {
+        return parse(xmlString, null);
+    }
+
+    /**
+     * Parses an XML String into a Document<br>
+     * The thrown Exception will contain validation errors when a schema is provided.
+     * @param xmlString
+     * @param schema - the schema XSD
+     * @return The org.w3c.dom.Document
+     * @throws ParserConfigurationException,IOException, SAXException
+     */
+    public static Document parse(String xmlString, String schema) throws ParserConfigurationException, IOException, SAXException {
+        // parse
+        Document document = null;
+        SAXErrorHandler seh = new SAXErrorHandler();
+
+        SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY.setValidating((schema != null));
+        if (schema != null) {
+            SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource",
+                    new InputSource(new StringReader(schema)));
+        }
+        DocumentBuilder builder = SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
+        builder.setErrorHandler(seh);
+        document = builder.parse(new InputSource(new StringReader(xmlString)));
+
+        // check if document parsed correctly against the schema
+        if (schema != null) {
+            String errors = seh.getErrors();
+            if (!errors.equals("")) {
+                String err = "Document  did not parse against schema: \n" + errors + "\n"
+                        + xmlString.substring(0, Math.min(100, xmlString.length()));
+                LOGGER.error(err);
+                throw new SAXException(err);
+            }
+        }
+        return document;
+    }
+
+    public static Transformer generateTransformer() throws TransformerConfigurationException {
+        return TRANSFORMER_FACTORY.newTransformer();
+    }
+
+    public static Transformer generateTransformer(boolean isOmitXmlDeclaration) throws TransformerConfigurationException {
+        Transformer transformer = generateTransformer();
+        if (isOmitXmlDeclaration) {
+            transformer.setOutputProperty("omit-xml-declaration", "yes");
+        } else {
+            transformer.setOutputProperty("omit-xml-declaration", "no");
+        }
+        return transformer;
+    }
+
+    public static Transformer generateTransformer(boolean isOmitXmlDeclaration, boolean isIndent)
+            throws TransformerConfigurationException {
+        Transformer transformer = generateTransformer(isOmitXmlDeclaration);
+        if (isIndent) {
+            transformer.setOutputProperty("indent", "yes");
+        } else {
+            transformer.setOutputProperty("indent", "no");
+        }
+        return transformer;
+    }
+
+    public static String nodeToString(Node n) throws TransformerException {
+        return nodeToString(n, true, true);
+    }
+
+    public static String nodeToString(Node n, boolean isOmitXmlDeclaration, boolean isIndent) throws TransformerException {
+        StringWriter sw = new StringWriter();
+        Transformer transformer = generateTransformer(isOmitXmlDeclaration, isIndent);
+        transformer.transform(new DOMSource(n), new StreamResult(sw));
+        return sw.toString();
+    }
+
+    /**
+     * Validates the element against the provided XSD schema
+     * @param element
+     * @param schema
+     * @return
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws TransformerException
+     */
+    public static Document validate(Element element, String schema) throws SAXException, ParserConfigurationException,
+            IOException, TransformerException {
+        // parse
+        Document document = null;
+        SAXErrorHandler seh = new SAXErrorHandler();
+        SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY.setValidating((schema != null));
+        if (schema != null) {
+            SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource",
+                    new InputSource(new StringReader(schema)));
+        }
+        DocumentBuilder builder = SCHEMA_VALIDATING_DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
+        builder.setErrorHandler(seh);
+        document = builder.parse(new InputSource(new StringReader(nodeToString(element))));
+
+        // check if dcument parsed correctly against the schema
+        if (schema != null) {
+            String errors = seh.getErrors();
+            if (!errors.equals("")) {
+                String xmlString = nodeToString(element);
+                String err = "The item " + element.getLocalName() + " did not validate against the model: \n" + errors + "\n"
+                        + xmlString; // .substring(0, Math.min(100, xmlString.length()));
+                throw new SAXException(err);
+            }
+        }
+        return document;
     }
 }
