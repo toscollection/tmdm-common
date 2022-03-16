@@ -1491,7 +1491,7 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-core</artifactId>
-                <version>1.6.2</version>
+                <version>1.6.5</version>
                 <exclusions>
                     <exclusion>
                         <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -1530,12 +1530,12 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>1.6.2</version>
+                <version>1.6.5</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-jaxrs</artifactId>
-                <version>1.6.2</version>
+                <version>1.6.5</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.javassist</groupId>
@@ -1546,6 +1546,22 @@
                         <artifactId>jackson-databind</artifactId>
                     </exclusion>
                     <exclusion>
+                        <groupId>com.fasterxml.jackson.dataformat</groupId>
+                        <artifactId>jackson-dataformat-yaml</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.dataformat</groupId>
+                        <artifactId>jackson-dataformat-xml</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.datatype</groupId>
+                        <artifactId>jackson-datatype-joda</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.yaml</groupId>
+                        <artifactId>snakeyaml</artifactId>
+                    </exclusion>
+                    <exclusion>
                         <groupId>javax.ws.rs</groupId>
                         <artifactId>jsr311-api</artifactId>
                     </exclusion>
@@ -1554,34 +1570,42 @@
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
-                <version>0.9.11</version>
+                <version>0.10.2</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>org.javassist</groupId>
-                        <artifactId>javassist</artifactId>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>jsr305</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>23.0</version>
+                <version>31.1-jre</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>animal-sniffer-annotations</artifactId>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>failureaccess</artifactId>
                     </exclusion>
                     <exclusion>
-                        <groupId>com.google.j2objc</groupId>
-                        <artifactId>j2objc-annotations</artifactId>
+                        <groupId>com.google.errorprone</groupId>
+                        <artifactId>error_prone_annotations</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>com.google.code.findbugs</groupId>
                         <artifactId>jsr305</artifactId>
                     </exclusion>
                     <exclusion>
-                        <groupId>com.google.errorprone</groupId>
-                        <artifactId>error_prone_annotations</artifactId>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>listenablefuture</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.checkerframework</groupId>
+                        <artifactId>checker-qual</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.j2objc</groupId>
+                        <artifactId>j2objc-annotations</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
