@@ -26,7 +26,7 @@
         <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
         <logging.version>2.17.1</logging.version>
         <slf4j.version>1.7.33</slf4j.version>
-        <spring.version>5.3.12</spring.version>
+        <spring.version>5.3.16</spring.version>
         <spring.security.version>5.5.3</spring.security.version>
         <cxf.version>3.4.5</cxf.version>
         <powermock.version>1.7.4</powermock.version>
