@@ -432,7 +432,7 @@ public class MetadataUtils {
          * networks", Communications of the ACM"
          */
         List<ComplexTypeMetadata> sortedTypes = new LinkedList<>();
-        List<ComplexTypeMetadata> noIncomingEdges = new LinkedList<>();
+        Set<ComplexTypeMetadata> noIncomingEdges = new HashSet<>();
         int lineNumber = 0;
         for (byte[] line : dependencyGraph) {
             if (!hasIncomingEdges(line)) {
@@ -499,6 +499,9 @@ public class MetadataUtils {
                                     int currentDependency = getId(containingType, types);
                                     List<ComplexTypeMetadata> list = new LinkedList<>(dependencyPath);
                                     list.add(containingType);
+                                    if (currentDependency >= dependencyGraph.length) {
+                                        continue;
+                                    }
                                     if (hasIncomingEdges(dependencyGraph[currentDependency]) && !map.containsKey(list)) {
                                         if (dependencyGraph[currentDependency][currentLineNumber] > 0) {
                                             dependencyGraph[currentDependency][currentLineNumber]--;
