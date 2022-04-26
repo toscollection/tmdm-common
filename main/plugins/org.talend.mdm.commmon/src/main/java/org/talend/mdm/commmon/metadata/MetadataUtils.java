@@ -484,6 +484,9 @@ public class MetadataUtils {
                             // in entities).
                             if (containingType != null && !containingType.equals(type)) {
                                 int currentDependency = getId(containingType, types);
+                                if (currentDependency >= dependencyGraph.length) {
+                                    continue;
+                                }
                                 if (hasIncomingEdges(dependencyGraph[currentDependency])) {
                                     dependencyGraph[currentLineNumber][currentDependency]--;
                                     currentLineNumber = currentDependency;
