@@ -49,9 +49,11 @@ Using the bug tracker [Talend bugtracker](http://jira.talendforge.org/) is the b
 
 Feel free to share your Talend components on [Talend Exchange](http://www.talendforge.org/exchange).
 
+## Reporting Security Issues
+Please refer to [SECURITY.md](./SECURITY.md).
 
 ## License
 
-Copyright (c) 2006-2019 Talend
+Copyright (c) 2006-2022 Talend
 
 Licensed under the GPLv2 License
