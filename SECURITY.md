@@ -4,7 +4,7 @@
 
 Talend takes the security of our software products and services seriously, which includes all source code repositories managed through our GitHub organization [Talend](https://github.com/talend).
 
-If you believe you have found a security vulnerability in any Talend-owned repository that meets Talend's [definition](https://www.talend.com/security/incident-response/)) of a security vulnerability, please report it to us as described below.
+If you believe you have found a security vulnerability in any Talend-owned repository that meets Talend's [definition](https://www.talend.com/security/incident-response/) of a security vulnerability, please report it to us as described below.
 
 ## Reporting Security Issues
 
