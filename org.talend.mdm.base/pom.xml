@@ -45,7 +45,8 @@
         <jacoco.exec.file>${project.parent.build.directory}/${project.artifactId}.exec</jacoco.exec.file>
         <xalan.version>2.7.2</xalan.version>
         <saxon.version>9.0.0.8</saxon.version>
-        <jaxb.version>2.3.0</jaxb.version>
+        <jaxb.impl.version>2.3.6</jaxb.impl.version>
+        <jaxb.core.version>2.3.0.1</jaxb.core.version>
         <jakarta.jaxb.version>2.3.2</jakarta.jaxb.version>
         <daikon.version>4.1.0</daikon.version>
         <apache.taglibs.version>1.2.5</apache.taglibs.version>
@@ -867,12 +868,12 @@
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-impl</artifactId>
-                <version>${jaxb.version}</version>
+                <version>${jaxb.impl.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-core</artifactId>
-                <version>${jaxb.version}</version>
+                <version>${jaxb.core.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.xml.bind</groupId>
