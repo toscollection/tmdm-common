@@ -47,7 +47,8 @@
         <mdm.app.dir>${dev.tomcat.home}/webapps/talendmdm</mdm.app.dir>
         <jacoco.exec.file>${project.parent.build.directory}/${project.artifactId}.exec</jacoco.exec.file>
         <jakarta.jaxb.version>2.3.2</jakarta.jaxb.version>
-        <jaxb.version>2.3.0</jaxb.version>
+        <jaxb.impl.version>2.3.6</jaxb.impl.version>
+        <jaxb.core.version>2.3.0.1</jaxb.core.version>
         <xalan.version>2.7.2</xalan.version>
         <saxon.version>9.0.0.8</saxon.version>
         <daikon.version>4.1.0</daikon.version>
@@ -902,12 +903,12 @@
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-impl</artifactId>
-                <version>${jaxb.version}</version>
+                <version>${jaxb.impl.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-core</artifactId>
-                <version>${jaxb.version}</version>
+                <version>${jaxb.core.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
