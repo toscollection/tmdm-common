@@ -18,16 +18,20 @@ import static org.talend.mdm.commmon.util.core.MDMConfiguration.TDS_PASSWORD;
 import static org.talend.mdm.commmon.util.core.MDMConfiguration.TECHNICAL_PASSWORD;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,9 +78,7 @@ public class EncryptUtil {
             File file = new File(location);
             if (file.exists()) {
                 PropertiesConfiguration config = new PropertiesConfiguration();
-                config.setDelimiterParsingDisabled(true);
-                config.setEncoding(StandardCharsets.UTF_8.name());
-                config.load(file);
+                config.read(new InputStreamReader(new FileInputStream(file)));
                 if (file.getName().equals("mdm.conf")) { //$NON-NLS-1$
                     dataSourceName = config.getString(DB_DEFAULT_DATASOURCE) == null ? StringUtils.EMPTY : config
                             .getString(DB_DEFAULT_DATASOURCE);
@@ -91,7 +93,7 @@ public class EncryptUtil {
                     }
                 }
                 if (updated) {
-                    config.save(file);
+                    config.write(new OutputStreamWriter(new FileOutputStream(file)));
                 }
             }
         } catch (Exception e) {
@@ -103,10 +105,8 @@ public class EncryptUtil {
         try {
             File file = new File(location);
             if (file.exists()) {
-                XMLConfiguration config = new XMLConfiguration();
-                config.setDelimiterParsingDisabled(true);
-                config.setEncoding(StandardCharsets.UTF_8.name());
-                config.load(file);
+                Configurations configs = new Configurations();
+                XMLConfiguration config = configs.xml(file);
                 List<Object> dataSources = config.getList("datasource.[@name]"); //$NON-NLS-1$
                 int index = -1;
                 for (int i = 0; i < dataSources.size(); i++) {
@@ -126,7 +126,7 @@ public class EncryptUtil {
                     encryptByXpath(sub, "system.rdbms-configuration.init.connection-password"); //$NON-NLS-1$
                 }
                 if (updated) {
-                    config.save(file);
+                    config.write(new OutputStreamWriter(new FileOutputStream(file)));
                 }
             }
         } catch (Exception e) {
