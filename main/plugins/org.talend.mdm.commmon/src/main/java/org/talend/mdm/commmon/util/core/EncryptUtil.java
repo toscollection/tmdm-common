@@ -31,7 +31,9 @@ import java.util.Map.Entry;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +45,6 @@ public class EncryptUtil {
     private static String DB_DEFAULT_DATASOURCE = "db.default.datasource"; //$NON-NLS-1$
 
     public static String ACTIVEMQ_PASSWORD = "mdm.routing.engine.broker.password"; //$NON-NLS-1$
-
-    private static boolean updated = false;
 
     private static String dataSourceName;
 
@@ -77,23 +77,20 @@ public class EncryptUtil {
         try {
             File file = new File(location);
             if (file.exists()) {
-                PropertiesConfiguration config = new PropertiesConfiguration();
-                config.read(new InputStreamReader(new FileInputStream(file)));
+                Configurations configs = new Configurations();
+                FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder = configs.propertiesBuilder(file);
+                propertiesBuilder.setAutoSave(true);
+                PropertiesConfiguration config = propertiesBuilder.getConfiguration();
                 if (file.getName().equals("mdm.conf")) { //$NON-NLS-1$
                     dataSourceName = config.getString(DB_DEFAULT_DATASOURCE) == null ? StringUtils.EMPTY : config
                             .getString(DB_DEFAULT_DATASOURCE);
                 }
-                updated = false;
                 for (String property : properties) {
                     String password = config.getString(property);
                     if (StringUtils.isNotEmpty(password) && !password.endsWith(Crypt.ENCRYPT)) {
                         password = Crypt.encrypt(password);
                         config.setProperty(property, password);
-                        updated = true;
                     }
-                }
-                if (updated) {
-                    config.write(new OutputStreamWriter(new FileOutputStream(file)));
                 }
             }
         } catch (Exception e) {
@@ -106,7 +103,9 @@ public class EncryptUtil {
             File file = new File(location);
             if (file.exists()) {
                 Configurations configs = new Configurations();
-                XMLConfiguration config = configs.xml(file);
+                FileBasedConfigurationBuilder<XMLConfiguration> builder = configs.xmlBuilder(file);
+                builder.setAutoSave(true);
+                XMLConfiguration config = builder.getConfiguration();
                 List<Object> dataSources = config.getList("datasource.[@name]"); //$NON-NLS-1$
                 int index = -1;
                 for (int i = 0; i < dataSources.size(); i++) {
@@ -115,9 +114,8 @@ public class EncryptUtil {
                         break;
                     }
                 }
-                updated = false;
                 if (index >= 0) {
-                    HierarchicalConfiguration sub = config.configurationAt("datasource(" + index + ")"); //$NON-NLS-1$//$NON-NLS-2$
+                    HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("datasource(" + index + ")", true); //$NON-NLS-1$//$NON-NLS-2$
                     encryptByXpath(sub, "master.rdbms-configuration.connection-password"); //$NON-NLS-1$
                     encryptByXpath(sub, "master.rdbms-configuration.init.connection-password"); //$NON-NLS-1$
                     encryptByXpath(sub, "staging.rdbms-configuration.connection-password"); //$NON-NLS-1$
@@ -125,20 +123,16 @@ public class EncryptUtil {
                     encryptByXpath(sub, "system.rdbms-configuration.connection-password"); //$NON-NLS-1$
                     encryptByXpath(sub, "system.rdbms-configuration.init.connection-password"); //$NON-NLS-1$
                 }
-                if (updated) {
-                    config.write(new OutputStreamWriter(new FileOutputStream(file)));
-                }
             }
         } catch (Exception e) {
             LOGGER.error("Encrypt password in '" + location + "' error."); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
-    private static void encryptByXpath(HierarchicalConfiguration config, String xpath) throws Exception {
+    private static void encryptByXpath(HierarchicalConfiguration<ImmutableNode> config, String xpath) throws Exception {
         String password = config.getString(xpath);
         if (StringUtils.isNotEmpty(password) && !password.endsWith(Crypt.ENCRYPT)) {
             config.setProperty(xpath, Crypt.encrypt(password));
-            updated = true;
         }
     }
 }
