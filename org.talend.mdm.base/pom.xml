@@ -49,7 +49,6 @@
         <jakarta.jaxb.version>2.3.2</jakarta.jaxb.version>
         <jaxb.impl.version>2.3.6</jaxb.impl.version>
         <jaxb.core.version>2.3.0.1</jaxb.core.version>
-        <xalan.version>2.7.2</xalan.version>
         <saxon.version>9.0.0.8</saxon.version>
         <daikon.version>4.1.0</daikon.version>
         <apache.taglibs.version>1.2.5</apache.taglibs.version>
@@ -1383,11 +1382,6 @@
                 <groupId>xml-apis</groupId>
                 <artifactId>xml-apis</artifactId>
                 <version>1.4.01</version>
-            </dependency>
-            <dependency>
-                <groupId>xalan</groupId>
-                <artifactId>xalan</artifactId>
-                <version>${xalan.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sourceforge.saxon</groupId>
