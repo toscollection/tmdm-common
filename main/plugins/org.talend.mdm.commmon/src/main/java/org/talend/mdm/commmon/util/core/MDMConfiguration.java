@@ -11,11 +11,13 @@
 package org.talend.mdm.commmon.util.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
-import org.apache.commons.configuration.ConfigurationConverter;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.ConfigurationConverter;
+import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,8 +157,7 @@ public final class MDMConfiguration {
             LOGGER.info("MDM Configuration: found in '" + file.getAbsolutePath() + "'.");
             try {
                 PropertiesConfiguration config = new PropertiesConfiguration();
-                config.setDelimiterParsingDisabled(true);
-                config.load(file);
+                config.read(new InputStreamReader(new FileInputStream(file)));
                 // Decrypt the passwords in mdm.conf
                 config.setProperty(ADMIN_PASSWORD, Crypt.decrypt(config.getString(ADMIN_PASSWORD)));
                 config.setProperty(TECHNICAL_PASSWORD, Crypt.decrypt(config.getString(TECHNICAL_PASSWORD)));
