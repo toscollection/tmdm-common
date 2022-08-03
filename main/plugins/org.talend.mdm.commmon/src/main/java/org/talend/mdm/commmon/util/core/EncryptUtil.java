@@ -18,25 +18,30 @@ import static org.talend.mdm.commmon.util.core.MDMConfiguration.TDS_PASSWORD;
 import static org.talend.mdm.commmon.util.core.MDMConfiguration.TECHNICAL_PASSWORD;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
-import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.tree.ImmutableNode;
+import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 
 public class EncryptUtil {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(EncryptUtil.class);
+
     private static String DB_DEFAULT_DATASOURCE = "db.default.datasource"; //$NON-NLS-1$
 
     public static String ACTIVEMQ_PASSWORD = "mdm.routing.engine.broker.password"; //$NON-NLS-1$
+
+    private static boolean updated = false;
 
 	private static String dataSourceName;
 
@@ -73,22 +78,27 @@ public class EncryptUtil {
         try {
             File file = new File(location);
             if (file.exists()) {
-                Configurations configs = new Configurations();
-                FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder = configs.propertiesBuilder(file);
-                propertiesBuilder.setAutoSave(true);
-                PropertiesConfiguration config = propertiesBuilder.getConfiguration();
+                PropertiesConfiguration config = new PropertiesConfiguration();
+                config.setDelimiterParsingDisabled(true);
+                config.setEncoding(StandardCharsets.UTF_8.name());
+                config.load(file);
                 if (file.getName().equals("mdm.conf")) { //$NON-NLS-1$
-                    dataSourceName = config.getString(DB_DEFAULT_DATASOURCE) == null ? StringUtils.EMPTY
-                            : config.getString(DB_DEFAULT_DATASOURCE);
+                    dataSourceName = config.getString(DB_DEFAULT_DATASOURCE) == null ? StringUtils.EMPTY : config
+                            .getString(DB_DEFAULT_DATASOURCE);
                 }
+                updated = false;
                 for (String property : properties) {
                     String password = config.getString(property);
-                    if (StringUtils.isNotEmpty(password)) {
-                        config.setProperty(property, AESEncryption.getInstance().reEncrypt(property, password));
+                    if (StringUtils.isNotEmpty(password)) {                     	
+						config.setProperty(property, AESEncryption.getInstance().reEncrypt(property, password));
+                        updated = true;
                     }
                 }
+                if (updated) {
+                    config.save(file);
+                }
             }
-        } catch (Exception e) {
+        } catch (Exception e) { 
             throw new Exception("Encrypt password in '" + location + "' error.", e); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
@@ -97,10 +107,10 @@ public class EncryptUtil {
         try {
             File file = new File(location);
             if (file.exists()) {
-                Configurations configs = new Configurations();
-                FileBasedConfigurationBuilder<XMLConfiguration> builder = configs.xmlBuilder(file);
-                builder.setAutoSave(true);
-                XMLConfiguration config = builder.getConfiguration();
+                XMLConfiguration config = new XMLConfiguration();
+                config.setDelimiterParsingDisabled(true);
+                config.setEncoding(StandardCharsets.UTF_8.name());
+                config.load(file);
                 List<Object> dataSources = config.getList("datasource.[@name]"); //$NON-NLS-1$
                 int index = -1;
                 for (int i = 0; i < dataSources.size(); i++) {
@@ -109,8 +119,9 @@ public class EncryptUtil {
                         break;
                     }
                 }
+                updated = false;
                 if (index >= 0) {
-                    HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("datasource(" + index + ")", true); //$NON-NLS-1$//$NON-NLS-2$
+                    HierarchicalConfiguration sub = config.configurationAt("datasource(" + index + ")"); //$NON-NLS-1$//$NON-NLS-2$
                     encryptByXpath(sub, "master.rdbms-configuration.connection-password"); //$NON-NLS-1$
                     encryptByXpath(sub, "master.rdbms-configuration.init.connection-password"); //$NON-NLS-1$
                     encryptByXpath(sub, "staging.rdbms-configuration.connection-password"); //$NON-NLS-1$
@@ -118,16 +129,20 @@ public class EncryptUtil {
                     encryptByXpath(sub, "system.rdbms-configuration.connection-password"); //$NON-NLS-1$
                     encryptByXpath(sub, "system.rdbms-configuration.init.connection-password"); //$NON-NLS-1$
                 }
+                if (updated) {
+                    config.save(file);
+                }
             }
         } catch (Exception e) {
             throw new Exception("Encrypt password in '" + location + "' error."); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
-    private static void encryptByXpath(HierarchicalConfiguration<ImmutableNode> config, String xpath) throws Exception {
+    private static void encryptByXpath(HierarchicalConfiguration config, String xpath) throws Exception {
         String password = config.getString(xpath);
-        if (StringUtils.isNotEmpty(password)) {
+        if (StringUtils.isNotEmpty(password)) {     	
 			config.setProperty(xpath, AESEncryption.getInstance().reEncrypt(xpath, password));
+            updated = true;
         }
     }
 }
