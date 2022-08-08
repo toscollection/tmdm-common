@@ -12,14 +12,13 @@ package org.talend.mdm.commmon.util.core;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-import org.apache.commons.configuration.ConfigurationConverter;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.ConfigurationConverter;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.talend.mdm.commmon.util.core.AESEncryption;
 
 /**
  * Handles the mdm.conf file
@@ -156,10 +155,8 @@ public final class MDMConfiguration {
         if (file.exists()) {
             LOGGER.info("MDM Configuration: found in '" + file.getAbsolutePath() + "'.");
             try {
-                PropertiesConfiguration config = new PropertiesConfiguration();
-                config.setDelimiterParsingDisabled(true);
-                config.setEncoding(StandardCharsets.UTF_8.name());
-                config.load(file);
+                Configurations configs = new Configurations();
+                PropertiesConfiguration config = configs.properties(file);
                 // Decrypt the passwords in mdm.conf
 				AESEncryption encryption = AESEncryption.getInstance();
                 config.setProperty(ADMIN_PASSWORD, encryption.decrypt(ADMIN_PASSWORD, config.getString(ADMIN_PASSWORD)));
@@ -226,5 +223,4 @@ public final class MDMConfiguration {
             return Integer.MAX_VALUE;
         }
     }
-
 }
