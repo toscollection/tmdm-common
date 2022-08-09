@@ -18,6 +18,7 @@ import static org.talend.mdm.commmon.util.core.MDMConfiguration.TDS_PASSWORD;
 import static org.talend.mdm.commmon.util.core.MDMConfiguration.TECHNICAL_PASSWORD;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -78,6 +79,7 @@ public class EncryptUtil {
             File file = new File(location);
             if (file.exists()) {
                 Configurations configs = new Configurations();
+                FileBasedConfigurationBuilder.setDefaultEncoding(PropertiesConfiguration.class, StandardCharsets.UTF_8.name());
                 FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder = configs.propertiesBuilder(file);
                 propertiesBuilder.setAutoSave(true);
                 PropertiesConfiguration config = propertiesBuilder.getConfiguration();
@@ -103,6 +105,7 @@ public class EncryptUtil {
             File file = new File(location);
             if (file.exists()) {
                 Configurations configs = new Configurations();
+                FileBasedConfigurationBuilder.setDefaultEncoding(PropertiesConfiguration.class, StandardCharsets.UTF_8.name());
                 FileBasedConfigurationBuilder<XMLConfiguration> builder = configs.xmlBuilder(file);
                 builder.setAutoSave(true);
                 XMLConfiguration config = builder.getConfiguration();

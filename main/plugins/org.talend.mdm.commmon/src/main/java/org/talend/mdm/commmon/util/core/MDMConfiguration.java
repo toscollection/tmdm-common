@@ -11,6 +11,7 @@
 package org.talend.mdm.commmon.util.core;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -157,7 +158,7 @@ public final class MDMConfiguration {
             LOGGER.info("MDM Configuration: found in '" + file.getAbsolutePath() + "'.");
             try {
                 PropertiesConfiguration config = new PropertiesConfiguration();
-                config.read(new InputStreamReader(new FileInputStream(file)));
+                config.read(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8.name()));
                 // Decrypt the passwords in mdm.conf
                 config.setProperty(ADMIN_PASSWORD, Crypt.decrypt(config.getString(ADMIN_PASSWORD)));
                 config.setProperty(TECHNICAL_PASSWORD, Crypt.decrypt(config.getString(TECHNICAL_PASSWORD)));
