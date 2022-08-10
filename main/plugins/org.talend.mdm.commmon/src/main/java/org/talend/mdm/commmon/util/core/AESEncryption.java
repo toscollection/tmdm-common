@@ -11,6 +11,7 @@ package org.talend.mdm.commmon.util.core;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,7 @@ public class AESEncryption {
                 File file = new File(keyfile);
                 if (file.exists()) {
                     Configurations configs = new Configurations();
+                    FileBasedConfigurationBuilder.setDefaultEncoding(PropertiesConfiguration.class, StandardCharsets.UTF_8.name());
                     FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder = configs.propertiesBuilder(file);
                     PropertiesConfiguration config = propertiesBuilder.getConfiguration();
                     if (StringUtils.isEmpty(config.getString(ENCRYPTION_KEY))) {
