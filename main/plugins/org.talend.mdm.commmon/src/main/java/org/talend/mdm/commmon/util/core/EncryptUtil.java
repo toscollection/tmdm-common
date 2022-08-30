@@ -86,6 +86,8 @@ public class EncryptUtil {
                 for (String property : properties) {
                     String password = config.getString(property);
                     if (StringUtils.isNotEmpty(password)) {
+                        // TMDM-15322 PropertiesConfiguration can't unescape \space to space in commons-configuration2
+                        password = password.indexOf("\\ ") >= 0 ? password.replace("\\ ", " ") : password;
                         config.setProperty(property, AESEncryption.getInstance().reEncrypt(property, password));
                     }
                 }
