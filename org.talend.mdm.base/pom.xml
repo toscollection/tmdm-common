@@ -28,7 +28,7 @@
         <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
         <logging.version>2.18.0</logging.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <cxf.version>3.5.2</cxf.version>
+        <cxf.version>3.5.4</cxf.version>
         <spring.version>5.3.23</spring.version>
         <spring.security.version>5.7.5</spring.security.version>
         <spring.boot.version>2.7.5</spring.boot.version>
@@ -1293,6 +1293,16 @@
                         <artifactId>commons-collections4</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>9.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.messaging.saaj</groupId>
+                <artifactId>saaj-impl</artifactId>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
