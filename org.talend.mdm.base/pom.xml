@@ -27,8 +27,8 @@
         <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
         <logging.version>2.19.0</logging.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <spring.version>5.3.23</spring.version>
-        <spring.security.version>5.7.5</spring.security.version>
+        <spring.version>5.3.25</spring.version>
+        <spring.security.version>5.8.1</spring.security.version>
         <cxf.version>3.5.5</cxf.version>
         <powermock.version>1.7.4</powermock.version>
         <hibernate.search.version>5.0.1.Final</hibernate.search.version>
