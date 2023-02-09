@@ -54,6 +54,6 @@ Please refer to [SECURITY.md](./SECURITY.md).
 
 ## License
 
-Copyright (c) 2006-2022 Talend
+Copyright (c) 2006-2023 Talend
 
 Licensed under the GPLv2 License
