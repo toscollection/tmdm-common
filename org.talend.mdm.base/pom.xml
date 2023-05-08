@@ -29,9 +29,9 @@
         <logging.version>2.19.0</logging.version>
         <slf4j.version>1.7.36</slf4j.version>
         <cxf.version>3.5.5</cxf.version>
-        <spring.version>5.3.26</spring.version>
-        <spring.security.version>5.8.1</spring.security.version>
-        <spring.boot.version>2.7.7</spring.boot.version>
+        <spring.version>5.3.27</spring.version>
+        <spring.security.version>5.8.3</spring.security.version>
+        <spring.boot.version>2.7.11</spring.boot.version>
         <powermock.version>1.7.4</powermock.version>
         <hibernate.search.version>5.11.10.Final</hibernate.search.version>
         <lucene.version>5.5.5</lucene.version>
