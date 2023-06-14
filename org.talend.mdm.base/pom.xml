@@ -20,9 +20,9 @@
         <gwt.localWorkers>4</gwt.localWorkers>
         <gwt.restlet.version>2.2.1</gwt.restlet.version>
         <gwt.flot.version>3.3.0</gwt.flot.version>
-        <gwt.log.version>3.1.8</gwt.log.version>
+        <gwt.log.version>3.3.2</gwt.log.version>
         <gwt.gxt.version>2.3.1-gwt22</gwt.gxt.version>
-        <gwt.dnd.version>3.1.2</gwt.dnd.version>
+        <gwt.dnd.version>3.3.4</gwt.dnd.version>
         <gson.version>2.10.1</gson.version>
 
         <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
