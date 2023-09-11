@@ -29,11 +29,13 @@
         <slf4j.version>1.7.36</slf4j.version>
         <cxf.version>3.5.5</cxf.version>
         <spring.version>5.3.29</spring.version>
-        <spring.security.version>5.8.5</spring.security.version>
+        <spring.security.version>5.8.6</spring.security.version>
         <powermock.version>1.7.4</powermock.version>
         <hibernate.search.version>5.0.1.Final</hibernate.search.version>
         <jackson.version>2.14.1</jackson.version>
         <org.restlet.version>2.4.0</org.restlet.version>
+        <spring.boot.version>2.7.15</spring.boot.version>
+        <iam.client.version>8.0.1-20211020160641</iam.client.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <trimStackTrace>false</trimStackTrace>
@@ -792,6 +794,16 @@
                         <artifactId>dom4j</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>5.4.3.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml</groupId>
+                <artifactId>classmate</artifactId>
+                <version>1.5.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.logging</groupId>
