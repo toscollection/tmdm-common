@@ -32,7 +32,7 @@
         <spring.security.version>5.8.6</spring.security.version>
         <powermock.version>1.7.4</powermock.version>
         <hibernate.search.version>5.0.1.Final</hibernate.search.version>
-        <jackson.version>2.14.1</jackson.version>
+        <jackson.version>2.14.3</jackson.version>
         <org.restlet.version>2.4.0</org.restlet.version>
         <spring.boot.version>2.7.15</spring.boot.version>
         <iam.client.version>8.0.1-20211020160641</iam.client.version>
