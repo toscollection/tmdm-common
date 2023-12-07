@@ -53,7 +53,7 @@
         <saxon.version>9.0.0.8</saxon.version>
         <daikon.version>4.1.0</daikon.version>
         <apache.taglibs.version>1.2.5</apache.taglibs.version>
-        <org.bouncycastle.version>1.70</org.bouncycastle.version>
+        <org.bouncycastle.version>1.77</org.bouncycastle.version>
         <iam.client.version>8.0.1-20211020160641</iam.client.version>
     </properties>
     <repositories>
@@ -943,17 +943,17 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
+                <artifactId>bcprov-jdk18on</artifactId>
                 <version>${org.bouncycastle.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
+                <artifactId>bcpkix-jdk18on</artifactId>
                 <version>${org.bouncycastle.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.bouncycastle</groupId>
-                        <artifactId>bcutil-jdk15on</artifactId>
+                        <artifactId>bcutil-jdk18on</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
